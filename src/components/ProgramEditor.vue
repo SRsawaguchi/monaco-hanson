@@ -1,8 +1,17 @@
 <template>
   <div class="program-editor">
-    <select name="language-picker" v-model="language">
-      <option v-for="lang in languages" v-bind:key="lang.id" v-bind:value="lang.id">{{ lang.id }}</option>
-    </select>
+    <v-row>
+      <v-col cols="12" sm="6">
+        <v-select
+          v-model="selectedLanguage"
+          :items="supportedLanguages"
+          label="languages"
+          item-text="displayText"
+          item-id="id"
+          return-object
+        ></v-select>
+      </v-col>
+    </v-row>
     <select name="theme-picker" v-model="selectedTheme">
       <option
         v-for="theme in themes"
@@ -37,9 +46,14 @@ export default {
       editor: null,
       vim: null,
       emacs: null,
-      language: "go",
+      selectedLanguage: "go",
       selectedTheme: "vs",
-      selectedFontSize: "12"
+      selectedFontSize: "12",
+      supportedLanguages: [
+        { id: "c", displayText: "C" },
+        { id: "go", displayText: "Go" },
+        { id: "php", displayText: "PHP" }
+      ]
     };
   },
   mounted: function() {
@@ -53,9 +67,11 @@ export default {
       },
       wordWrap: "off",
       insertSpaces: false,
-      tabSize: 4,
+      tabSize: 4
     });
     this.toVimMode();
+    console.log(process.env.VUE_APP_NOT_SECRET_CODE);
+    console.log(process.env.VUE_APP_API);
   },
   methods: {
     clearMode() {
@@ -83,8 +99,8 @@ export default {
       console.log("vim mode");
     },
     format() {
-        console.log('format');
-        this.editor.trigger('ProgramEditor', 'editor.action.formatDocument');
+      console.log("format");
+      this.editor.trigger("ProgramEditor", "editor.action.formatDocument");
     },
     changeMode() {
       if (this.vim != null) {
@@ -116,9 +132,9 @@ export default {
     statusBar() {
       return this.$refs.monacoEditorStatusBar;
     },
-    languages() {
-      return monaco.languages.getLanguages();
-    },
+    // languages() {
+    //   return monaco.languages.getLanguages();
+    // },
     themes() {
       return [
         {
@@ -153,8 +169,8 @@ export default {
     }
   },
   watch: {
-    language() {
-      this.changeLanguage(this.language);
+    selectedLanguage() {
+      this.changeLanguage(this.selectedLanguage.id);
     },
     selectedTheme() {
       this.changeTheme(this.selectedTheme);
@@ -169,7 +185,7 @@ export default {
 
 <style>
 .monaco-editor {
-  width: 50%;
   height: 500px;
+  text-align: left;
 }
 </style>
