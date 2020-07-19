@@ -2,6 +2,7 @@
   <div class="program-editor">
     <v-row>
       <v-col cols="12" sm="6">
+        <v-btn @click="switchDarkMode">Theme</v-btn>
         <v-select
           v-model="selectedLanguage"
           :items="supportedLanguages"
@@ -126,6 +127,9 @@ export default {
       this.editor.updateOptions({
         fontSize: fontSize
       });
+    },
+    switchDarkMode() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
     }
   },
   computed: {
