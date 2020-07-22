@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar color="" dense app>
+    <v-app-bar color="" dense elevation="0" app>
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
       <v-toolbar-title>Page title</v-toolbar-title>
@@ -36,15 +36,13 @@
           <SideNav @onClickItem="onClickNavigationItem" :items="items" />
         </v-col>
 
-        <v-col
-          cols="8"
-          class="fill-height"
-          style="background-color: #555"
-        ></v-col>
+        <v-col cols="8" class="fill-height">
+          <ProgramEditor />
+        </v-col>
         <v-col class="fill-height" style="background-color: #888"></v-col>
       </v-row>
 
-      <DrawerSettings :open="drawer" @toggle="toggleDrawer"/>
+      <DrawerSettings :open="drawer" @toggle="toggleDrawer" />
     </v-main>
 
     <v-footer app>
@@ -56,6 +54,7 @@
 <script>
 import SideNav from "./components/SideNav";
 import DrawerSettings from "./components/DrawerSettings";
+import ProgramEditor from "./components/ProgramEditor";
 
 export default {
   name: "App",
@@ -63,6 +62,7 @@ export default {
   components: {
     SideNav,
     DrawerSettings,
+    ProgramEditor,
   },
 
   data() {
@@ -73,7 +73,7 @@ export default {
   },
   methods: {
     toggleDrawer(val) {
-      this.drawer = val
+      this.drawer = val;
     },
     onClickNavigationItem(idx) {
       if (idx === 0) {

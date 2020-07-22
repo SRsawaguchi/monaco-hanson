@@ -1,37 +1,14 @@
 <template>
-  <div class="program-editor">
-    <v-row>
-      <v-col cols="12" sm="6">
-        <v-btn @click="switchDarkMode">Theme</v-btn>
-        <v-select
-          v-model="selectedLanguage"
-          :items="supportedLanguages"
-          label="languages"
-          item-text="displayText"
-          item-id="id"
-          return-object
-        ></v-select>
-      </v-col>
-    </v-row>
-    <select name="theme-picker" v-model="selectedTheme">
-      <option
-        v-for="theme in themes"
-        v-bind:key="theme.value"
-        v-bind:value="theme.value"
-      >{{ theme.label }}</option>
-    </select>
-    <select name="font-picker" v-model="selectedFontSize">
-      <option
-        v-for="font in fontSizes"
-        v-bind:key="font.value"
-        v-bind:value="font.value"
-      >{{ font.label }}</option>
-    </select>
-    <button v-on:click="changeMode">Change Mode</button>
-    <button v-on:click="format">format</button>
-    <div class="monaco-editor" ref="monaco"></div>
-    <div class="monaco-editor-status-bar" ref="monacoEditorStatusBar"></div>
-  </div>
+  <v-container class="program-editor fill-height pa-0 " fluid>
+    <div
+      class="monaco-editor fill-height"
+      ref="monaco"
+      style="border: 1px solid #ccc; width: 100%;"
+    ></div>
+    <v-card v-if="false" class="ma-0" flat outlined width="100%">
+     <div class="monaco-editor-status-bar " ref="monacoEditorStatusBar"></div>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
@@ -48,13 +25,13 @@ export default {
       vim: null,
       emacs: null,
       selectedLanguage: "go",
-      selectedTheme: "vs",
+      selectedTheme: "vs-dark",
       selectedFontSize: "12",
       supportedLanguages: [
         { id: "c", displayText: "C" },
         { id: "go", displayText: "Go" },
-        { id: "php", displayText: "PHP" }
-      ]
+        { id: "php", displayText: "PHP" },
+      ],
     };
   },
   mounted: function() {
@@ -64,13 +41,14 @@ export default {
       language: "go",
       fontSize: "16",
       minimap: {
-        enabled: false
+        enabled: false,
       },
       wordWrap: "off",
       insertSpaces: false,
-      tabSize: 4
+      tabSize: 4,
     });
     this.toVimMode();
+    // this.changeTheme(this.selectedTheme)
     console.log(process.env.VUE_APP_NOT_SECRET_CODE);
     console.log(process.env.VUE_APP_API);
   },
@@ -85,10 +63,10 @@ export default {
       this.clearMode();
       this.emacs = new EmacsExtension(this.editor);
       const statusNode = this.statusBar;
-      this.emacs.onDidMarkChange(ev => {
+      this.emacs.onDidMarkChange((ev) => {
         statusNode.textContent = ev ? "Mark Set!" : "Mark Unset";
       });
-      this.emacs.onDidChangeKey(str => {
+      this.emacs.onDidChangeKey((str) => {
         statusNode.textContent = str;
       });
       this.emacs.start();
@@ -125,12 +103,12 @@ export default {
     },
     changeFontSize(fontSize) {
       this.editor.updateOptions({
-        fontSize: fontSize
+        fontSize: fontSize,
       });
     },
     switchDarkMode() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
-    }
+    },
   },
   computed: {
     statusBar() {
@@ -143,34 +121,34 @@ export default {
       return [
         {
           label: "VS",
-          value: "vs"
+          value: "vs",
         },
         {
           label: "VS Dark",
-          value: "vs-dark"
+          value: "vs-dark",
         },
         {
           label: "High Contrast (Dark)",
-          value: "hc-black"
-        }
+          value: "hc-black",
+        },
       ];
     },
     fontSizes() {
       return [
         {
           label: "small",
-          value: "12"
+          value: "12",
         },
         {
           label: "medim",
-          value: "16"
+          value: "16",
         },
         {
           label: "large",
-          value: "20"
-        }
+          value: "20",
+        },
       ];
-    }
+    },
   },
   watch: {
     selectedLanguage() {
@@ -182,14 +160,9 @@ export default {
     selectedFontSize() {
       console.log("changed");
       this.changeFontSize(this.selectedFontSize);
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style>
-.monaco-editor {
-  height: 500px;
-  text-align: left;
-}
-</style>
+<style></style>
