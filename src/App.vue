@@ -31,30 +31,25 @@
     </v-app-bar>
 
     <v-main>
-      <v-row class="fill-height" no-gutters>
-        <v-col max-width="54px">
-          <v-card dark class="fill-height">
-            <v-list dense>
-              <v-list-item
-                v-for="item in items"
-                :key="item.title"
-                @click="drawer = !drawer"
-              >
-                <v-tooltip right>
-                  <template v-slot:activator="{ on }">
-                    <v-list-item-action v-on="on">
-                      <v-icon>{{ item.icon }}</v-icon>
-                    </v-list-item-action>
-                    <v-list-item-content></v-list-item-content>
-                  </template>
-                  <span>{{ item.title }}</span>
-                </v-tooltip>
-              </v-list-item>
-            </v-list>
-          </v-card>
+      <v-row class="d-flex fill-height" no-gutters>
+
+        <v-col  class="fill-height flex-grow-0">
+          <v-list class="fill-height" width="54px">
+            <v-list-item
+              v-for="item in items"
+              :key="item.title"
+              @click="drawer = !drawer"
+            >
+              <v-list-item-action v-on="on">
+                <v-icon>{{ item.icon }}</v-icon>
+              </v-list-item-action>
+              <v-list-item-content></v-list-item-content>
+            </v-list-item>
+          </v-list>
         </v-col>
-        <v-col class="fill-height" style="background-color: #555"></v-col>
-        <v-col class="fill-height" style="background-color: #888"></v-col>
+
+        <v-col cols="8" class="fill-height" style="background-color: #555"></v-col>
+        <v-col  class="fill-height" style="background-color: #888"></v-col>
       </v-row>
 
       <!-- Drawer (Settings) -->
