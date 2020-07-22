@@ -32,62 +32,19 @@
 
     <v-main>
       <v-row class="d-flex fill-height" no-gutters>
-
-        <v-col  class="fill-height flex-grow-0">
-          <SideNav @onClickItem="onClickNavigationItem" :items="items"/>
+        <v-col class="fill-height flex-grow-0">
+          <SideNav @onClickItem="onClickNavigationItem" :items="items" />
         </v-col>
 
-        <v-col cols="8" class="fill-height" style="background-color: #555"></v-col>
-        <v-col  class="fill-height" style="background-color: #888"></v-col>
+        <v-col
+          cols="8"
+          class="fill-height"
+          style="background-color: #555"
+        ></v-col>
+        <v-col class="fill-height" style="background-color: #888"></v-col>
       </v-row>
 
-      <!-- Drawer (Settings) -->
-      <v-navigation-drawer v-model="drawer" absolute temporary>
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title class="title">
-              Settings
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-divider />
-        <v-list flat>
-          <v-list-item-group>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title>Dark mode</v-list-item-title>
-              </v-list-item-content>
-              <v-list-item-action>
-                <v-switch v-model="darkmode"></v-switch>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-
-        <v-divider></v-divider>
-
-        <v-container>
-          <v-select
-            label="Indent types"
-            :items="indents"
-            v-model="selectedIndent"
-            flat
-          ></v-select>
-          <v-select
-            label="Font size"
-            :items="fontSizes"
-            v-model="selectedFontSize"
-            flat
-          ></v-select>
-          <v-select
-            label="keybindings"
-            :items="keybindings"
-            v-model="selectedKeybinding"
-            flat
-          ></v-select>
-        </v-container>
-      </v-navigation-drawer>
+      <DrawerSettings :open="drawer" @toggle="toggleDrawer"/>
     </v-main>
 
     <v-footer app>
@@ -97,46 +54,30 @@
 </template>
 
 <script>
-import SideNav from './components/SideNav'
+import SideNav from "./components/SideNav";
+import DrawerSettings from "./components/DrawerSettings";
+
 export default {
   name: "App",
 
   components: {
     SideNav,
+    DrawerSettings,
   },
 
   data() {
     return {
-      darkmode: true,
       drawer: false,
       items: [{ title: "editor settings", icon: "mdi-cog" }],
-      selectedIndent: "spaces",
-      indents: ["spaces", "tabs"],
-      selectedFontSize: 12,
-      fontSizes: [12, 14, 18],
-      keybindings: ["normal", "vim", "emacs"],
-      selectedKeybinding: "normal",
     };
   },
   methods: {
-    onClick() {
-      this.drawer = !this.drawer;
-    },
-    openDrawer() {
-      this.drawer = true
-      console.log('open!')
+    toggleDrawer(val) {
+      this.drawer = val
     },
     onClickNavigationItem(idx) {
       if (idx === 0) {
-        this.openDrawer()
-      }
-    }
-  },
-  watch: {
-    darkmode() {
-      console.log(this.darkmode);
-      if (this.darkmode) {
-        console.log("Darkmode!");
+        this.toggleDrawer(true);
       }
     },
   },
