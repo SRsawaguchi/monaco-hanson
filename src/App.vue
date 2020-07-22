@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app style="overflow: hidden;">
     <v-app-bar color="" dense elevation="0" app>
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
@@ -39,14 +39,24 @@
         <v-col cols="8" class="fill-height">
           <ProgramEditor />
         </v-col>
-        <v-col class="fill-height" style="background-color: #888"></v-col>
+        <v-col class="fill-height" style="background-color: #888">
+          <v-card>
+            <v-expansion-panels :flat="true" :tile="true">
+              <v-expansion-panel v-for="(item, i) in 1" :key="i">
+                <v-expansion-panel-header>STDIN</v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-textarea label="STDIN" outlined></v-textarea>
+                </v-expansion-panel-content>
+              </v-expansion-panel></v-expansion-panels>
+          </v-card>
+        </v-col>
       </v-row>
 
       <DrawerSettings :open="drawer" @toggle="toggleDrawer" />
     </v-main>
 
-    <v-footer app>
-      this is footer
+    <v-footer>
+      This is footer
     </v-footer>
   </v-app>
 </template>
