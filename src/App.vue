@@ -34,18 +34,7 @@
       <v-row class="d-flex fill-height" no-gutters>
 
         <v-col  class="fill-height flex-grow-0">
-          <v-list class="fill-height" width="54px">
-            <v-list-item
-              v-for="item in items"
-              :key="item.title"
-              @click="drawer = !drawer"
-            >
-              <v-list-item-action v-on="on">
-                <v-icon>{{ item.icon }}</v-icon>
-              </v-list-item-action>
-              <v-list-item-content></v-list-item-content>
-            </v-list-item>
-          </v-list>
+          <SideNav @onClickItem="onClickNavigationItem" :items="items"/>
         </v-col>
 
         <v-col cols="8" class="fill-height" style="background-color: #555"></v-col>
@@ -108,10 +97,13 @@
 </template>
 
 <script>
+import SideNav from './components/SideNav'
 export default {
   name: "App",
 
-  components: {},
+  components: {
+    SideNav,
+  },
 
   data() {
     return {
@@ -130,6 +122,15 @@ export default {
     onClick() {
       this.drawer = !this.drawer;
     },
+    openDrawer() {
+      this.drawer = true
+      console.log('open!')
+    },
+    onClickNavigationItem(idx) {
+      if (idx === 0) {
+        this.openDrawer()
+      }
+    }
   },
   watch: {
     darkmode() {
