@@ -37,22 +37,7 @@
         :items="items"
       />
       <v-card id="chiraura-ide" tile>
-        <v-card
-          id="chiraura-editor"
-          tile
-          ref="chirauraEditor"
-          :style="editorStyles"
-        >
-        </v-card>
-        <v-card
-          class="chiraura-size-handler"
-          tile
-          @mousedown="startResizing"
-          ref="chirauraSizeHandler"
-          :style="handleStyles"
-        >
-          <div class="chiraura-divider"></div>
-        </v-card>
+        <Resizable></Resizable>
       </v-card>
       <DrawerSettings :open="drawer" @toggle="toggleDrawer" />
     </v-main>
@@ -62,6 +47,7 @@
 <script>
 import SideNav from "./components/SideNav";
 import DrawerSettings from "./components/DrawerSettings";
+import Resizable from "./components/Resizable"
 // import ProgramEditor from "./components/ProgramEditor";
 
 export default {
@@ -71,6 +57,7 @@ export default {
     SideNav,
     DrawerSettings,
     // ProgramEditor,
+    Resizable,
   },
 
   data() {
@@ -191,8 +178,6 @@ export default {
   top: 0;
   width: 10px;
   height: 100%;
-  cursor: col-resize;
-  display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
