@@ -1,5 +1,5 @@
 <template>
-  <v-list class="fill-height" width="54px" outlined>
+  <v-list class="" width="54px" outlined>
     <v-list-item
       v-for="(item, index) in items"
       v-bind:key="index"
