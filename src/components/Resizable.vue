@@ -11,7 +11,7 @@
       @drag="onDrag"
       @dragend="onDragEnd"
     >
-        <div class="divider"></div>
+      <div class="divider"></div>
     </v-card>
     <v-card class="rightBlock" flat tile ref="rightBlock"></v-card>
   </v-card>
@@ -25,6 +25,12 @@ export default {
       counter: 0,
     };
   },
+  mounted() {
+    const resizer = this.$refs.resizer.$el;
+    const resizable = this.$refs.resizable.$el;
+    const resizableOffsetLeft = resizable.offsetParent.offsetLeft + resizer.offsetLeft;
+    this.resize(resizableOffsetLeft);
+  },
   methods: {
     throttle() {
       this.counter += 1;
@@ -33,11 +39,7 @@ export default {
     onDragStart() {
       console.log("start");
     },
-    onDrag({ pageX }) {
-      if (!this.throttle()) {
-        return;
-      }
-
+    resize(offsetX) {
       const minWidth = 100;
       const resizable = this.$refs.resizable.$el;
       const leftBlock = this.$refs.leftBlock.$el;
@@ -45,7 +47,7 @@ export default {
       const rightBlock = this.$refs.rightBlock.$el;
 
       const adjust = resizable.offsetParent.offsetLeft + resizer.offsetWidth;
-      const leftWidth = pageX - adjust;
+      const leftWidth = offsetX - adjust;
       const rightWidth =
         resizable.offsetWidth - leftWidth - resizer.offsetWidth;
 
@@ -55,7 +57,13 @@ export default {
         rightBlock.style.width = `${rightWidth}px`;
         rightBlock.style.left = `${leftWidth + resizer.offsetWidth}px`;
       }
-      console.log(rightWidth)
+      console.log(rightWidth);
+    },
+    onDrag({ pageX }) {
+      if (!this.throttle()) {
+        return;
+      }
+      this.resize(pageX);
     },
     onDragEnd() {
       console.log("end");
@@ -87,12 +95,12 @@ export default {
     cursor: col-resize;
     display: flex;
     flex-direction: column;
-    justify-content:  center;
+    justify-content: center;
     align-items: center;
     .divider {
-        width: 2px;
-        height: calc(1.68em * 2);
-        background-color: #2d2d2d;
+      width: 2px;
+      height: calc(1.68em * 2);
+      background-color: #2d2d2d;
     }
   }
   .rightBlock {
