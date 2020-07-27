@@ -37,13 +37,22 @@
         :items="items"
       />
       <v-card id="chiraura-ide" tile>
-        <v-card id="chiraura-editor" tile>
-          <ProgramEditor></ProgramEditor>
+        <v-card
+          id="chiraura-editor"
+          tile
+          ref="chirauraEditor"
+          :style="editorStyles"
+        >
         </v-card>
-        <v-card class="chiraura-size-handler" tile>
+        <v-card
+          class="chiraura-size-handler"
+          tile
+          @mousedown="startResizing"
+          ref="chirauraSizeHandler"
+          :style="handleStyles"
+        >
           <div class="chiraura-divider"></div>
         </v-card>
-        <v-card id="chiraura-terminal" tile></v-card>
       </v-card>
       <DrawerSettings :open="drawer" @toggle="toggleDrawer" />
     </v-main>
@@ -53,7 +62,7 @@
 <script>
 import SideNav from "./components/SideNav";
 import DrawerSettings from "./components/DrawerSettings";
-import ProgramEditor from "./components/ProgramEditor";
+// import ProgramEditor from "./components/ProgramEditor";
 
 export default {
   name: "App",
@@ -61,13 +70,25 @@ export default {
   components: {
     SideNav,
     DrawerSettings,
-    ProgramEditor,
+    // ProgramEditor,
   },
 
   data() {
     return {
       drawer: false,
       items: [{ title: "editor settings", icon: "mdi-cog" }],
+      editorStyles: {
+        width: "",
+      },
+      handleStyles: {
+        width: "",
+        left: "",
+      },
+      terminalStyles: {
+        width: "",
+        left: "",
+      },
+      isResizing: false,
     };
   },
   methods: {
@@ -78,6 +99,44 @@ export default {
       if (idx === 0) {
         this.toggleDrawer(true);
       }
+    },
+    startResizing({
+      // target: resizer,
+      pageX: initialPageX,
+      // pageY: initialPageY,
+    }) {
+      // // const resize = (initialSize, offset = 0) => {
+      // //   const width = offset + initialSize;
+      // //   return width;
+      // };
+
+      console.log("down");
+      this.isResizing = true;
+      const { addEventListener, removeEventListener } = window;
+
+      const onMouseMove = ({ pageX }) => {
+        // const size = resize(initialPageX, pageX);
+        const width = this.$refs.chirauraEditor.$el.clientWidth;
+        const offset = pageX - initialPageX;
+        const elm = document.getElementById("chiraura-editor");
+        // this.$refs.chirauraEditor.$el.style.width = width + offset;
+        elm.style.width = `${ width + offset }px`;
+        // console.log(this.$refs.chirauraEditor.$el.clientWidth);
+        console.log(`initialPageX: ${initialPageX}, offset: ${offset}`);
+
+        const bar = document.querySelector('.chiraura-size-handler');
+        bar.style.left = `${pageX - 54}`;
+        console.log(bar.style.left);
+      };
+
+      const onMouseUp = () => {
+        this.isResizing = false;
+        removeEventListener("mousemove", onMouseMove);
+        removeEventListener("mouseup", onMouseUp);
+        console.log("up");
+      };
+      addEventListener("mousemove", onMouseMove);
+      addEventListener("mouseup", onMouseUp);
     },
   },
 };
@@ -138,6 +197,8 @@ export default {
   align-items: center;
   justify-content: center;
   background-color: #ccc;
+  padding: 0;
+  margin: 0;
 }
 
 .chiraura-size-handler .chiraura-divider {
