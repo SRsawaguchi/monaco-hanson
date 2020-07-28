@@ -8,6 +8,7 @@
     flat
     tile
     ref="resizable"
+    v-resize="onResize"
   >
     <v-card class="firstBlock" flat tile ref="firstBlock">
       <slot name="firstBlock"></slot>
@@ -67,6 +68,11 @@ export default {
     throttle() {
       this.counter += 1;
       return this.counter % this.throttleThreshold === 0;
+    },
+    onResize(e) {
+      if (e && e.isTrusted) {
+        this.resize();
+      }
     },
     onDragStart() {
       console.log("start");
