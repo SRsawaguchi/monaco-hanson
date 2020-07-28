@@ -1,13 +1,10 @@
 <template>
-  <v-container class="program-editor fill-height pa-0 " fluid>
+  <v-container class="program-editor pa-0">
     <div
-      class="monaco-editor fill-height"
+      class="monaco-editor"
       ref="monaco"
-      style="border: 1px solid #ccc; width: 100%;"
     ></div>
-    <v-card v-if="false" class="ma-0" flat outlined width="100%">
-     <div class="monaco-editor-status-bar " ref="monacoEditorStatusBar"></div>
-    </v-card>
+    <div class="monaco-editor-status-bar " ref="monacoEditorStatusBar"></div>
   </v-container>
 </template>
 
@@ -165,4 +162,32 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss">
+.program-editor {
+  $statusBarHeight: 1.2em;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  .monaco-editor {
+    position:absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    height: calc(100% - #{$statusBarHeight});
+  }
+  .monaco-editor-status-bar {
+    position: absolute;
+    bottom: 0;
+    left : 0;
+    height: #{$statusBarHeight};
+    width: 100%;
+    padding: 0;
+    padding-left: .68em;
+    margin: 0;
+    background: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+  }
+}
+</style>
