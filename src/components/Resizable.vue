@@ -97,7 +97,7 @@ export default {
         offsetX = globalOffset.left + resizer.offsetLeft;
       }
 
-      const adjust = globalOffset.left + resizer.offsetWidth;
+      const adjust = globalOffset.left;
       const firstWidth = offsetX - adjust;
       const secondWidth =
         resizable.offsetWidth - firstWidth - resizer.offsetWidth;
@@ -118,9 +118,10 @@ export default {
       const secondBlock = this.secondBlockDom;
       if (offsetY === null) {
         offsetY = globalOffset.top + resizer.offsetTop;
-      }
+        console.log(offsetY);
+      } 
 
-      const adjust = globalOffset.top + resizer.offsetHeight;
+      const adjust = globalOffset.top;
       const firstHeight = offsetY - adjust;
       const secondHeight =
         resizable.offsetHeight - firstHeight - resizer.offsetHeight;
@@ -212,9 +213,13 @@ export default {
     justify-content: center;
     align-items: center;
   }
+  .resizer:hover {
+    border: 2px solid blue;
+  }
   .secondBlock {
     position: absolute;
     border: 1px solid blue;
+    border-bottom: 2px solid blue;
   }
 
   &.layoutRow {
