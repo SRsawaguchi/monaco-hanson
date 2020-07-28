@@ -143,6 +143,17 @@ export default {
     onDragEnd() {
       this.isResizing = false;
       console.log("end");
+      const sizes = {
+        first: {
+          width: this.firstBlockDom.offsetWidth,
+          height: this.firstBlockDom.offsetHeight,
+        },
+        second: {
+          width: this.secondBlockDom.offsetWidth,
+          height: this.secondBlockDom.offsetHeight,
+        }
+      };
+      this.$emit('manuallyResizeFinished', sizes);
     },
     onLayoutChanged() {
       this.resizableDom.style = "";

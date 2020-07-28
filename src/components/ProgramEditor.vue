@@ -1,10 +1,7 @@
 <template>
-  <v-container class="program-editor">
-    <div
-      class="monaco-editor"
-      ref="monaco"
-    ></div>
-    <div class="monaco-editor-status-bar " ref="monacoEditorStatusBar"></div>
+  <v-container :class="classes" v-resize="onResize">
+    <div class="monaco-editor" ref="monaco"></div>
+    <div v-if="isVimMode" class="monaco-editor-status-bar " ref="monacoEditorStatusBar"></div>
   </v-container>
 </template>
 
@@ -15,6 +12,12 @@ import { EmacsExtension } from "monaco-emacs";
 
 export default {
   name: "ProgramEditor",
+  props: {
+    width: {
+      type: Number,
+      default: 0, // For detecting resize.
+    },
+  },
   data: function() {
     return {
       mode: "normal",
@@ -29,6 +32,10 @@ export default {
         { id: "go", displayText: "Go" },
         { id: "php", displayText: "PHP" },
       ],
+      classes: {
+        "program-editor": true,
+        "mode-vim": this.isVimMode,
+      },
     };
   },
   mounted: function() {
@@ -44,7 +51,8 @@ export default {
       insertSpaces: false,
       tabSize: 4,
     });
-    this.toVimMode();
+    // this.toVimMode();
+    this.clearMode();
     // this.changeTheme(this.selectedTheme)
     console.log(process.env.VUE_APP_NOT_SECRET_CODE);
     console.log(process.env.VUE_APP_API);
@@ -106,13 +114,19 @@ export default {
     switchDarkMode() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
     },
+    onResize(){
+      if (this.editor) {
+        console.log('editor Resizing')
+        this.editor.layout()
+      }
+    },
   },
   computed: {
     statusBar() {
       return this.$refs.monacoEditorStatusBar;
     },
     isVimMode() {
-      return this.vim != null
+      return this.vim != null;
     },
     // languages() {
     //   return monaco.languages.getLanguages();
@@ -161,6 +175,9 @@ export default {
       console.log("changed");
       this.changeFontSize(this.selectedFontSize);
     },
+    width(){
+      this.onResize()
+    },
   },
 };
 </script>
@@ -174,25 +191,34 @@ export default {
   margin: 0;
   padding: 0;
   .monaco-editor {
-    position:absolute;
+    position: absolute;
     width: 100%;
     top: 0;
     left: 0;
     height: calc(100% - #{$statusBarHeight});
   }
+  &.vim-mode {
+    .monaco-editor {
+      position: absolute;
+      width: 100%;
+      top: 0;
+      left: 0;
+      height: 100%;
+    }
+  }
   .monaco-editor-status-bar {
     position: absolute;
     bottom: 0;
-    left : 0;
+    left: 0;
     height: #{$statusBarHeight};
     width: 100%;
     padding: 0;
-    padding-left: .68em;
+    padding-left: 0.68em;
     margin: 0;
     background: #ccc;
     display: flex;
     align-items: center;
-    justify-content: start;
+    justify-content: flex-start;
   }
 }
 </style>

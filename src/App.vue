@@ -37,9 +37,9 @@
         :items="items"
       />
       <v-card id="chiraura-ide" tile>
-        <Resizable direction="row">
+        <Resizable direction="row" @manuallyResizeFinished="onResizeIde">
           <template v-slot:firstBlock>
-            <ProgramEditor></ProgramEditor>
+            <ProgramEditor :width="editorWidth"></ProgramEditor>
           </template>
           <template v-slot:secondBlock>
             <v-card>
@@ -87,6 +87,7 @@ export default {
         left: "",
       },
       isResizing: false,
+      editorWidth: 0,
     };
   },
   methods: {
@@ -98,43 +99,8 @@ export default {
         this.toggleDrawer(true);
       }
     },
-    startResizing({
-      // target: resizer,
-      pageX: initialPageX,
-      // pageY: initialPageY,
-    }) {
-      // // const resize = (initialSize, offset = 0) => {
-      // //   const width = offset + initialSize;
-      // //   return width;
-      // };
-
-      console.log("down");
-      this.isResizing = true;
-      const { addEventListener, removeEventListener } = window;
-
-      const onMouseMove = ({ pageX }) => {
-        // const size = resize(initialPageX, pageX);
-        const width = this.$refs.chirauraEditor.$el.clientWidth;
-        const offset = pageX - initialPageX;
-        const elm = document.getElementById("chiraura-editor");
-        // this.$refs.chirauraEditor.$el.style.width = width + offset;
-        elm.style.width = `${width + offset}px`;
-        // console.log(this.$refs.chirauraEditor.$el.clientWidth);
-        console.log(`initialPageX: ${initialPageX}, offset: ${offset}`);
-
-        const bar = document.querySelector(".chiraura-size-handler");
-        bar.style.left = `${pageX - 54}`;
-        console.log(bar.style.left);
-      };
-
-      const onMouseUp = () => {
-        this.isResizing = false;
-        removeEventListener("mousemove", onMouseMove);
-        removeEventListener("mouseup", onMouseUp);
-        console.log("up");
-      };
-      addEventListener("mousemove", onMouseMove);
-      addEventListener("mouseup", onMouseUp);
+    onResizeIde(newSizes){
+      this.editorWidth = newSizes.first.width;
     },
   },
 };
@@ -151,9 +117,6 @@ export default {
   position: relative;
   margin: 0;
   padding: 0;
-}
-
-#chiraura-app-bar {
 }
 
 #chiraura-app-nav {
@@ -174,41 +137,4 @@ export default {
   margin: 0;
 }
 
-#chiraura-editor {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: calc(50% + -5px);
-  height: 100%;
-  border: 1px solid blue;
-}
-
-.chiraura-size-handler {
-  position: absolute;
-  left: calc(50% + -5px);
-  top: 0;
-  width: 10px;
-  height: 100%;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  background-color: #ccc;
-  padding: 0;
-  margin: 0;
-}
-
-.chiraura-size-handler .chiraura-divider {
-  width: 1px;
-  height: 48px;
-  background-color: #000;
-}
-
-#chiraura-terminal {
-  position: absolute;
-  left: calc(50% + 5px);
-  top: 0;
-  width: calc(50% + 0px);
-  height: 100%;
-  border: 1px solid violet;
-}
 </style>
