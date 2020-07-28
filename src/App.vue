@@ -37,7 +37,7 @@
         :items="items"
       />
       <v-card id="chiraura-ide" tile>
-        <Resizable></Resizable>
+        <Resizable direction="row"></Resizable>
       </v-card>
       <DrawerSettings :open="drawer" @toggle="toggleDrawer" />
     </v-main>
@@ -47,7 +47,7 @@
 <script>
 import SideNav from "./components/SideNav";
 import DrawerSettings from "./components/DrawerSettings";
-import Resizable from "./components/Resizable"
+import Resizable from "./components/Resizable";
 // import ProgramEditor from "./components/ProgramEditor";
 
 export default {
@@ -107,11 +107,11 @@ export default {
         const offset = pageX - initialPageX;
         const elm = document.getElementById("chiraura-editor");
         // this.$refs.chirauraEditor.$el.style.width = width + offset;
-        elm.style.width = `${ width + offset }px`;
+        elm.style.width = `${width + offset}px`;
         // console.log(this.$refs.chirauraEditor.$el.clientWidth);
         console.log(`initialPageX: ${initialPageX}, offset: ${offset}`);
 
-        const bar = document.querySelector('.chiraura-size-handler');
+        const bar = document.querySelector(".chiraura-size-handler");
         bar.style.left = `${pageX - 54}`;
         console.log(bar.style.left);
       };

@@ -1,6 +1,12 @@
 <template>
-  <v-card class="resizable" flat tile ref="resizable" v-resize="onResize">
-    <v-card class="leftBlock" flat tile ref="leftBlock"></v-card>
+  <v-card
+    class="resizable layoutRow"
+    flat
+    tile
+    ref="resizable"
+    v-resize="onResize"
+  >
+    <v-card class="firstBlock" flat tile ref="firstBlock"></v-card>
     <v-card
       class="resizer"
       flat
@@ -13,7 +19,7 @@
     >
       <div class="divider"></div>
     </v-card>
-    <v-card class="rightBlock" flat tile ref="rightBlock"></v-card>
+    <v-card class="secondBlock" flat tile ref="secondBlock"></v-card>
   </v-card>
 </template>
 
@@ -40,6 +46,10 @@ export default {
     return {
       isResizing: false,
       counter: 0, // for throttling
+      classes: {
+        layoutRow: this.isRowLayout,
+        layoutColumn: !this.isRowLayout,
+      },
     };
   },
   mounted() {
@@ -58,33 +68,66 @@ export default {
       console.log("start");
       this.isResizing = true;
     },
-    resize(offsetX = null) {
-      const minWidth = this.minSize;
-      const resizable = this.$refs.resizable.$el;
-      const leftBlock = this.$refs.leftBlock.$el;
-      const resizer = this.$refs.resizer.$el;
-      const rightBlock = this.$refs.rightBlock.$el;
-      if (offsetX === null) {
-        offsetX = resizable.offsetParent.offsetLeft + resizer.offsetLeft;
-      }
-
-      const adjust = resizable.offsetParent.offsetLeft + resizer.offsetWidth;
-      const leftWidth = offsetX - adjust;
-      const rightWidth =
-        resizable.offsetWidth - leftWidth - resizer.offsetWidth;
-
-      if (leftWidth >= minWidth && rightWidth >= minWidth) {
-        leftBlock.style.width = `${leftWidth}px`;
-        resizer.style.left = `${leftWidth}px`;
-        rightBlock.style.width = `${rightWidth}px`;
-        rightBlock.style.left = `${leftWidth + resizer.offsetWidth}px`;
+    resize(offset = null) {
+      if (this.isRowLayout) {
+        console.log("resizeX");
+        this.resizeX(offset);
+      } else {
+        this.resizeY(offset);
       }
     },
-    onDrag({ pageX }) {
+    resizeX(offsetX = null) {
+      const globalOffset = this.globalOffset;
+      const minWidth = this.minSize;
+      const resizable = this.$refs.resizable.$el;
+      const firstBlock = this.$refs.firstBlock.$el;
+      const resizer = this.$refs.resizer.$el;
+      const secondBlock = this.$refs.secondBlock.$el;
+      if (offsetX === null) {
+        offsetX = globalOffset.left + resizer.offsetLeft;
+      }
+
+      const adjust = globalOffset.left + resizer.offsetWidth;
+      const firstWidth = offsetX - adjust;
+      const secondWidth =
+        resizable.offsetWidth - firstWidth - resizer.offsetWidth;
+
+      if (firstWidth >= minWidth && secondWidth >= minWidth) {
+        firstBlock.style.width = `${firstWidth}px`;
+        resizer.style.left = `${firstWidth}px`;
+        secondBlock.style.width = `${secondWidth}px`;
+        secondBlock.style.left = `${firstWidth + resizer.offsetWidth}px`;
+      }
+    },
+    resizeY(offsetY = null) {
+      const globalOffset = this.globalOffset;
+      const minHeight = this.minSize;
+      const resizable = this.$refs.resizable.$el;
+      const firstBlock = this.$refs.firstBlock.$el;
+      const resizer = this.$refs.resizer.$el;
+      const secondBlock = this.$refs.secondBlock.$el;
+      if (offsetY === null) {
+        offsetY = globalOffset.top + resizer.offsetTop;
+      }
+
+      const adjust = globalOffset.top + resizer.offsetHeight;
+      const firstHeight = offsetY - adjust;
+      const secondHeight =
+        resizable.offsetHeight - firstHeight - resizer.offsetHeight;
+
+      if (firstHeight >= minHeight && secondHeight >= minHeight) {
+        firstBlock.style.height = `${firstHeight}px`;
+        resizer.style.top = `${firstHeight}px`;
+        secondBlock.style.height = `${secondHeight}px`;
+        secondBlock.style.top = `${firstHeight + resizer.offsetHeight}px`;
+      }
+    },
+    onDrag({ pageX, pageY }) {
       if (!this.throttle()) {
         return;
       }
-      this.resize(pageX);
+      const offset = this.isRowLayout ? pageX : pageY;
+      this.resize(offset);
     },
     onDragEnd() {
       this.isResizing = false;
@@ -95,48 +138,101 @@ export default {
     isRowLayout() {
       return this.direction === "row";
     },
+    globalOffset() {
+      let element = this.$refs.resizable.$el;
+      let top = 0,
+        left = 0;
+      do {
+        top += element.offsetTop || 0;
+        left += element.offsetLeft || 0;
+        element = element.offsetParent;
+      } while (element);
+
+      return {
+        top: top,
+        left: left,
+      };
+    },
   },
 };
 </script>
 
 <style lang="scss">
 .resizable {
+  $resizerSize: 12px;
+
   position: relative;
   height: 100%;
   width: 100%;
-  .leftBlock {
+  .firstBlock {
     border: 1px solid red;
     position: absolute;
-    top: 0;
-    left: 0;
-    width: calc(50% + -6px);
-    height: 100%;
   }
   .resizer {
     position: absolute;
-    top: 0;
-    left: calc(50% + -5px);
-    width: 12px;
-    height: 100%;
     border: 1px solid black;
-    cursor: col-resize;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    .divider {
-      width: 2px;
-      height: calc(1.68em * 2);
-      background-color: #2d2d2d;
+  }
+  .secondBlock {
+    position: absolute;
+    border: 1px solid blue;
+  }
+
+  &.layoutRow {
+    .firstBlock {
+      left: 0;
+      top: 0;
+      width: calc(50% + -#{$resizerSize / 2});
+      height: 100%;
+    }
+    .resizer {
+      left: calc(50% + -#{$resizerSize / 2});
+      top: 0;
+      width: $resizerSize;
+      height: 100%;
+      cursor: col-resize;
+      .divider {
+        width: 2px;
+        height: calc(1.68em * 2);
+        background-color: #2d2d2d;
+      }
+    }
+    .secondBlock {
+      left: calc(50% + #{$resizerSize / 2});
+      top: 0;
+      width: calc(50%);
+      height: 100%;
     }
   }
-  .rightBlock {
-    position: absolute;
-    left: calc(50% + 6px);
-    top: 0;
-    width: calc(50%);
-    height: 100%;
-    border: 1px solid blue;
+
+  &.layoutColumn {
+    .firstBlock {
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: calc(50% + -#{$resizerSize / 2});
+    }
+    .resizer {
+      left: 0;
+      top: calc(50% + -#{$resizerSize / 2});
+      width: 100%;
+      height: $resizerSize;
+      cursor: row-resize;
+      .divider {
+        height: 2px;
+        width: calc(1.68em * 2);
+        background-color: #2d2d2d;
+      }
+    }
+    .secondBlock {
+      left: 0;
+      top: calc(50% + #{$resizerSize / 2});
+      width: 100%;
+      height: calc(50%);
+    }
   }
 }
 </style>
