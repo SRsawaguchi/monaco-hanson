@@ -1,6 +1,10 @@
 <template>
   <v-card
-    class="resizable layoutRow"
+    :class="{
+      resizable: true,
+      layoutRow: isRowLayout,
+      layoutColumn: !isRowLayout,
+    }"
     flat
     tile
     ref="resizable"
