@@ -8,9 +8,10 @@
     flat
     tile
     ref="resizable"
-    v-resize="onResize"
   >
-    <v-card class="firstBlock" flat tile ref="firstBlock"></v-card>
+    <v-card class="firstBlock" flat tile ref="firstBlock">
+      <slot name="firstBlock"></slot>
+    </v-card>
     <v-card
       class="resizer"
       flat
@@ -24,7 +25,9 @@
     >
       <div class="divider"></div>
     </v-card>
-    <v-card class="secondBlock" flat tile ref="secondBlock"></v-card>
+    <v-card class="secondBlock" flat tile ref="secondBlock">
+      <slot name="secondBlock"></slot>
+    </v-card>
   </v-card>
 </template>
 
@@ -64,10 +67,6 @@ export default {
     throttle() {
       this.counter += 1;
       return this.counter % this.throttleThreshold === 0;
-    },
-    onResize() {
-      console.log("onResize");
-      this.resize();
     },
     onDragStart() {
       console.log("start");
