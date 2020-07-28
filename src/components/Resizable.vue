@@ -1,5 +1,5 @@
 <template>
-  <v-card class="resizable" flat tile ref="resizable">
+  <v-card class="resizable" flat tile ref="resizable" v-resize="onResize">
     <v-card class="leftBlock" flat tile ref="leftBlock"></v-card>
     <v-card
       class="resizer"
@@ -22,29 +22,35 @@ export default {
   name: "Resizable",
   data() {
     return {
-      counter: 0,
+      isResizing: false,
+      counter: 0, // for throttling
     };
   },
   mounted() {
-    const resizer = this.$refs.resizer.$el;
-    const resizable = this.$refs.resizable.$el;
-    const resizableOffsetLeft = resizable.offsetParent.offsetLeft + resizer.offsetLeft;
-    this.resize(resizableOffsetLeft);
+    this.resize();
   },
   methods: {
     throttle() {
       this.counter += 1;
-      return this.counter % 25 === 0;
+      return this.counter % 10 === 0;
+    },
+    onResize() {
+      console.log("onResize");
+      this.resize();
     },
     onDragStart() {
       console.log("start");
+      this.isResizing = true;
     },
-    resize(offsetX) {
+    resize(offsetX = null) {
       const minWidth = 100;
       const resizable = this.$refs.resizable.$el;
       const leftBlock = this.$refs.leftBlock.$el;
       const resizer = this.$refs.resizer.$el;
       const rightBlock = this.$refs.rightBlock.$el;
+      if (offsetX === null) {
+        offsetX = resizable.offsetParent.offsetLeft + resizer.offsetLeft;
+      }
 
       const adjust = resizable.offsetParent.offsetLeft + resizer.offsetWidth;
       const leftWidth = offsetX - adjust;
@@ -57,7 +63,6 @@ export default {
         rightBlock.style.width = `${rightWidth}px`;
         rightBlock.style.left = `${leftWidth + resizer.offsetWidth}px`;
       }
-      console.log(rightWidth);
     },
     onDrag({ pageX }) {
       if (!this.throttle()) {
@@ -66,6 +71,7 @@ export default {
       this.resize(pageX);
     },
     onDragEnd() {
+      this.isResizing = false;
       console.log("end");
     },
   },
