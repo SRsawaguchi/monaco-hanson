@@ -84,10 +84,10 @@ export default {
     resizeX(offsetX = null) {
       const globalOffset = this.globalOffset;
       const minWidth = this.minSize;
-      const resizable = this.$refs.resizable.$el;
-      const firstBlock = this.$refs.firstBlock.$el;
-      const resizer = this.$refs.resizer.$el;
-      const secondBlock = this.$refs.secondBlock.$el;
+      const resizable = this.resizableDom;
+      const firstBlock = this.firstBlockDom;
+      const resizer = this.resizerDom;
+      const secondBlock = this.secondBlockDom;
       if (offsetX === null) {
         offsetX = globalOffset.left + resizer.offsetLeft;
       }
@@ -107,10 +107,10 @@ export default {
     resizeY(offsetY = null) {
       const globalOffset = this.globalOffset;
       const minHeight = this.minSize;
-      const resizable = this.$refs.resizable.$el;
-      const firstBlock = this.$refs.firstBlock.$el;
-      const resizer = this.$refs.resizer.$el;
-      const secondBlock = this.$refs.secondBlock.$el;
+      const resizable = this.resizableDom;
+      const firstBlock = this.firstBlockDom;
+      const resizer = this.resizerDom;
+      const secondBlock = this.secondBlockDom;
       if (offsetY === null) {
         offsetY = globalOffset.top + resizer.offsetTop;
       }
@@ -138,6 +138,13 @@ export default {
       this.isResizing = false;
       console.log("end");
     },
+    onLayoutChanged() {
+      this.resizableDom.style = "";
+      this.firstBlockDom.style = "";
+      this.resizerDom.style = "";
+      this.secondBlockDom.style = "";
+      this.resize();
+    },
   },
   computed: {
     isRowLayout() {
@@ -157,6 +164,23 @@ export default {
         top: top,
         left: left,
       };
+    },
+    resizableDom() {
+      return this.$refs.resizable.$el;
+    },
+    firstBlockDom() {
+      return this.$refs.firstBlock.$el;
+    },
+    resizerDom() {
+      return this.$refs.resizer.$el;
+    },
+    secondBlockDom() {
+      return this.$refs.secondBlock.$el;
+    },
+  },
+  watch: {
+    direction() {
+      this.onLayoutChanged();
     },
   },
 };
