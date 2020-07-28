@@ -200,7 +200,6 @@ export default {
   height: 100%;
   width: 100%;
   .firstBlock {
-    border: 1px solid red;
     position: absolute;
   }
   .resizer {
@@ -218,8 +217,6 @@ export default {
   }
   .secondBlock {
     position: absolute;
-    border: 1px solid blue;
-    border-bottom: 2px solid blue;
   }
 
   &.layoutRow {

@@ -1,5 +1,5 @@
 <template>
-  <v-container class="program-editor pa-0">
+  <v-container class="program-editor">
     <div
       class="monaco-editor"
       ref="monaco"
@@ -111,6 +111,9 @@ export default {
     statusBar() {
       return this.$refs.monacoEditorStatusBar;
     },
+    isVimMode() {
+      return this.vim != null
+    },
     // languages() {
     //   return monaco.languages.getLanguages();
     // },
@@ -168,6 +171,8 @@ export default {
   position: relative;
   height: 100%;
   width: 100%;
+  margin: 0;
+  padding: 0;
   .monaco-editor {
     position:absolute;
     width: 100%;
