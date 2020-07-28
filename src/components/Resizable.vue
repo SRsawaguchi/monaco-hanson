@@ -13,6 +13,7 @@
       tile
       ref="resizer"
       color="gray"
+      draggable="true"
       @dragstart="onDragStart"
       @drag="onDrag"
       @dragend="onDragEnd"
@@ -170,6 +171,8 @@ export default {
   }
   .resizer {
     position: absolute;
+    padding: 0;
+    margin: 0;
     border: 1px solid black;
     display: flex;
     flex-direction: column;
