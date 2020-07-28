@@ -20,6 +20,22 @@
 <script>
 export default {
   name: "Resizable",
+  props: {
+    direction: {
+      type: String,
+      default: "row", // or column
+    },
+    throttleThreshold: {
+      // it execute resizing process each `throttleThrethold`.
+      type: Number,
+      default: 10,
+    },
+    minSize: {
+      // minimum width(or height) of each block
+      type: Number,
+      default: 100, // px
+    },
+  },
   data() {
     return {
       isResizing: false,
@@ -32,7 +48,7 @@ export default {
   methods: {
     throttle() {
       this.counter += 1;
-      return this.counter % 10 === 0;
+      return this.counter % this.throttleThreshold === 0;
     },
     onResize() {
       console.log("onResize");
@@ -43,7 +59,7 @@ export default {
       this.isResizing = true;
     },
     resize(offsetX = null) {
-      const minWidth = 100;
+      const minWidth = this.minSize;
       const resizable = this.$refs.resizable.$el;
       const leftBlock = this.$refs.leftBlock.$el;
       const resizer = this.$refs.resizer.$el;
@@ -73,6 +89,11 @@ export default {
     onDragEnd() {
       this.isResizing = false;
       console.log("end");
+    },
+  },
+  computed: {
+    isRowLayout() {
+      return this.direction === "row";
     },
   },
 };
