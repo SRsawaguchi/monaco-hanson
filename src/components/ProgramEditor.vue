@@ -188,6 +188,7 @@ export default {
   position: relative;
   height: 100%;
   width: 100%;
+  max-width: none;
   margin: 0;
   padding: 0;
   .monaco-editor {

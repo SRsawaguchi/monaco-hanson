@@ -37,16 +37,12 @@
         :items="items"
       />
       <v-card id="chiraura-ide" tile>
-        <Resizable direction="row" @manuallyResizeFinished="onResizeIde">
+        <Resizable direction="column" @manuallyResizeFinished="onResizeIde">
           <template v-slot:firstBlock>
             <ProgramEditor :width="editorWidth"></ProgramEditor>
           </template>
           <template v-slot:secondBlock>
-            <v-card>
-              <v-card>
-                <v-card-title>This is a card.</v-card-title>
-              </v-card>
-            </v-card>
+            <Terminal></Terminal>
           </template>
         </Resizable>
       </v-card>
@@ -60,6 +56,7 @@ import SideNav from "./components/SideNav";
 import DrawerSettings from "./components/DrawerSettings";
 import Resizable from "./components/Resizable";
 import ProgramEditor from "./components/ProgramEditor";
+import Terminal from "./components/Terminal";
 
 export default {
   name: "App",
@@ -69,6 +66,7 @@ export default {
     DrawerSettings,
     ProgramEditor,
     Resizable,
+    Terminal,
   },
 
   data() {
