@@ -1,9 +1,21 @@
 <template>
   <v-app id="chiraura" style="position: relative;">
-    <v-app-bar id="chiraura-app-bar" color="" dense elevation="0" app>
+    <v-app-bar id="chiraura-app-bar" color="" dense elevation="0" app height="60px">
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
       <v-toolbar-title>Page title</v-toolbar-title>
+
+      <v-spacer></v-spacer>
+      <v-btn  color="green" style="margin-right: .68em;">
+        <v-icon left>mdi-play</v-icon>
+        RUN
+      </v-btn>
+      <v-btn  @click="dialog = true">
+        <v-badge color="primary" icon="mdi-paperclip" :value="stdin">
+          <v-icon left>mdi-file-outline</v-icon>
+          STDIN
+        </v-badge>
+      </v-btn>
 
       <v-spacer></v-spacer>
 
@@ -46,7 +58,14 @@
           </template>
         </Resizable>
       </v-card>
+
       <DrawerSettings :open="drawer" @toggle="toggleDrawer" />
+
+      <StdinDialog
+        :dialog="dialog"
+        @close="closeDialog"
+        @update="onStdinUpdate"
+      ></StdinDialog>
     </v-main>
   </v-app>
 </template>
@@ -57,6 +76,7 @@ import DrawerSettings from "./components/DrawerSettings";
 import Resizable from "./components/Resizable";
 import ProgramEditor from "./components/ProgramEditor";
 import Terminal from "./components/Terminal";
+import StdinDialog from "./components/StdinDialog";
 
 export default {
   name: "App",
@@ -67,6 +87,7 @@ export default {
     ProgramEditor,
     Resizable,
     Terminal,
+    StdinDialog,
   },
 
   data() {
@@ -86,6 +107,9 @@ export default {
       },
       isResizing: false,
       editorWidth: 0,
+
+      dialog: false,
+      stdin: "",
     };
   },
   methods: {
@@ -97,14 +121,25 @@ export default {
         this.toggleDrawer(true);
       }
     },
-    onResizeIde(newSizes){
+    onResizeIde(newSizes) {
       this.editorWidth = newSizes.first.width;
+    },
+
+    // Edit Stdin
+    openDialog() {
+      this.dialog = true;
+    },
+    closeDialog() {
+      this.dialog = false;
+    },
+    onStdinUpdate(value) {
+      this.stdin = value;
     },
   },
 };
 </script>
 
-<style>
+<style lang="scss">
 #chiraura {
   width: 100vw;
   height: 100vh;
@@ -134,5 +169,4 @@ export default {
   padding: 0;
   margin: 0;
 }
-
 </style>

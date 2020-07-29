@@ -22,12 +22,12 @@
     </v-card>
 
     <v-card class="exec-info" tile flat>
-      <v-chip dark>
+      <v-chip dark small>
         <v-icon left>mdi-clock-outline</v-icon>
         Time Elapsed: {{ elapsedTimeMs }} MS
       </v-chip>
 
-      <v-chip dark :color="returnValueColor">
+      <v-chip dark small :color="returnValueColor">
         <v-icon left>mdi-function</v-icon>
         Return Value: {{ returnValue }}
       </v-chip>
