@@ -11,7 +11,7 @@
           STDIN
         </v-badge>
       </v-btn>
-      <v-btn rounded>
+      <v-btn rounded @click="onClickCopyButton">
         <v-icon left>mdi-clipboard-outline</v-icon>
         Copy
       </v-btn>
@@ -22,10 +22,7 @@
         <span>gcc -Wall -o main main.c</span>
       </v-card>
       <v-card class="output" tile flat>
-        <pre>
-hello world!
-hello world!</pre
-        >
+        <pre>{{ stdout }}</pre>
       </v-card>
       <v-card class="exec-info" tile flat>
         <v-chip dark>
@@ -69,6 +66,29 @@ hello world!</pre
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-snackbar
+      v-model="copySuccess"
+      right
+      success
+      timeout="3000"
+      color="success"
+    >
+      Copied!!
+      <template v-slot:action="{ attrs }">
+        <v-btn text v-bind="attrs" @click="copySuccess = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+    <v-snackbar v-model="copyFailed" right success timeout="3000" color="error">
+      Copy failed...
+      <template v-slot:action="{ attrs }">
+        <v-btn text v-bind="attrs" @click="copyFailed = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -79,7 +99,26 @@ export default {
     return {
       dialog: false,
       stdin: "",
+      stdout: "Hello world!!\nHello world!!!!",
+      copySuccess: false,
+      copyFailed: false,
     };
+  },
+  methods: {
+    onClickCopyButton() {
+      if (this.stdout === "") {
+        return;
+      }
+
+      navigator.clipboard.writeText(this.stdout).then(
+        () => {
+          this.copySuccess = true;
+        },
+        () => {
+          this.copyFailed = true;
+        }
+      );
+    },
   },
 };
 </script>
