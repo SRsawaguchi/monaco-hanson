@@ -1,16 +1,23 @@
 <template>
-  <v-app id="chiraura" style="position: relative;">
-    <v-app-bar id="chiraura-app-bar" color="" dense elevation="0" app height="60px">
+  <v-app id="chiraura" style="position: relative;" v-hotkey="keymap">
+    <v-app-bar
+      id="chiraura-app-bar"
+      color=""
+      dense
+      elevation="0"
+      app
+      height="60px"
+    >
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
       <v-toolbar-title>Page title</v-toolbar-title>
 
       <v-spacer></v-spacer>
-      <v-btn  color="green" style="margin-right: .68em;">
+      <v-btn color="green" style="margin-right: .68em;">
         <v-icon left>mdi-play</v-icon>
         RUN
       </v-btn>
-      <v-btn  @click="dialog = true">
+      <v-btn @click="dialog = true">
         <v-badge color="primary" icon="mdi-paperclip" :value="stdin">
           <v-icon left>mdi-file-outline</v-icon>
           STDIN
@@ -51,7 +58,7 @@
       <v-card id="chiraura-ide" tile>
         <Resizable direction="row" @manuallyResizeFinished="onResizeIde">
           <template v-slot:firstBlock>
-            <ProgramEditor :width="editorWidth"></ProgramEditor>
+            <ProgramEditor :width="editorWidth" @execute="run"></ProgramEditor>
           </template>
           <template v-slot:secondBlock>
             <Terminal></Terminal>
@@ -134,6 +141,17 @@ export default {
     },
     onStdinUpdate(value) {
       this.stdin = value;
+    },
+    run() {
+      console.log('run')
+    }
+  },
+  computed: {
+    keymap() {
+      return {
+        "ctrl+enter": this.run,
+        "meta+enter": this.run,
+      };
     },
   },
 };

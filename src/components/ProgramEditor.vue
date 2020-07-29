@@ -1,7 +1,11 @@
 <template>
   <v-container :class="classes" v-resize="onResize">
     <div class="monaco-editor" ref="monaco"></div>
-    <div v-if="isVimMode" class="monaco-editor-status-bar " ref="monacoEditorStatusBar"></div>
+    <div
+      v-if="isVimMode"
+      class="monaco-editor-status-bar "
+      ref="monacoEditorStatusBar"
+    ></div>
   </v-container>
 </template>
 
@@ -51,9 +55,19 @@ export default {
       insertSpaces: false,
       tabSize: 4,
     });
+    const self = this;
+    this.editor.addAction({
+      id: "ExecuteProgram",
+      label: "Execure program",
+      keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
+      run() {
+        self.$emit('execute')
+        return null;
+      },
+    });
     // this.toVimMode();
     this.clearMode();
-    this.changeTheme(this.selectedTheme)
+    this.changeTheme(this.selectedTheme);
     console.log(process.env.VUE_APP_NOT_SECRET_CODE);
     console.log(process.env.VUE_APP_API);
   },
@@ -114,10 +128,10 @@ export default {
     switchDarkMode() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
     },
-    onResize(){
+    onResize() {
       if (this.editor) {
-        console.log('editor Resizing')
-        this.editor.layout()
+        console.log("editor Resizing");
+        this.editor.layout();
       }
     },
   },
@@ -175,8 +189,8 @@ export default {
       console.log("changed");
       this.changeFontSize(this.selectedFontSize);
     },
-    width(){
-      this.onResize()
+    width() {
+      this.onResize();
     },
   },
 };
