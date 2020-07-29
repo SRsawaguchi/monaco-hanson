@@ -42,38 +42,6 @@
       </v-btn>
     </v-card>
 
-    <v-dialog v-model="dialog" persistent max-width="600px">
-      <v-card>
-        <v-card-title>
-          <span class="headline">Edit Stdin Value</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-card class="ma-0 pa-0" flat tile>
-              <v-card-text>
-                This value will be inputted your program from stdin. You can
-                read this by function like <v-chip>scanf()</v-chip>.
-              </v-card-text>
-            </v-card>
-            <v-textarea
-              v-model="stdin"
-              name="input-7-1"
-              label="STDIN"
-              value=""
-              hint="This value will be inputted your program from stdin."
-            ></v-textarea>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="dialog = false"
-            >Close</v-btn
-          >
-          <v-btn color="blue darken-1" text @click="dialog = false">Save</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
     <v-snackbar
       v-model="copySuccess"
       right
@@ -96,12 +64,20 @@
         </v-btn>
       </template>
     </v-snackbar>
+
+    <StdinDialog
+      :dialog="dialog"
+      @close="closeDialog"
+      @update="onStdinUpdate"
+    ></StdinDialog>
   </v-container>
 </template>
 
 <script>
+import StdinDialog from "./StdinDialog";
 export default {
   name: "Terminal",
+  components: { StdinDialog },
   data() {
     return {
       dialog: false,
@@ -112,6 +88,15 @@ export default {
     };
   },
   methods: {
+    openDialog() {
+      this.dialog = true;
+    },
+    closeDialog() {
+      this.dialog = false;
+    },
+    onStdinUpdate(value) {
+      this.stdin = value;
+    },
     onClickCopyButton() {
       if (this.stdout === "") {
         return;
