@@ -13,6 +13,7 @@
     "monaco-editor-webpack-plugin": "^1.9.0",
     "monaco-emacs": "^0.2.2",
     "monaco-vim": "^0.1.7",
+    "v-hotkey": "^0.8.0",
     "vue": "^2.6.11",
     "vuetify": "^2.2.11"
   },
