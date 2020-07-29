@@ -53,7 +53,7 @@ export default {
     });
     // this.toVimMode();
     this.clearMode();
-    // this.changeTheme(this.selectedTheme)
+    this.changeTheme(this.selectedTheme)
     console.log(process.env.VUE_APP_NOT_SECRET_CODE);
     console.log(process.env.VUE_APP_API);
   },

@@ -1,7 +1,7 @@
 <template>
   <v-container class="chiraura-terminal">
     <v-card class="tool-bar">
-      <v-btn rounded>
+      <v-btn rounded color="green">
         <v-icon left>mdi-play</v-icon>
         RUN
       </v-btn>
@@ -10,10 +10,6 @@
           <v-icon left>mdi-file-outline</v-icon>
           STDIN
         </v-badge>
-      </v-btn>
-      <v-btn rounded @click="onClickCopyButton">
-        <v-icon left>mdi-clipboard-outline</v-icon>
-        Copy
       </v-btn>
     </v-card>
     <v-card class="console">
@@ -34,7 +30,18 @@
           Return Value: 0
         </v-chip>
       </v-card>
+
+      <v-btn
+        small
+        rounded
+        @click="onClickCopyButton"
+        style="position: absolute; right: 0; top: 0; margin: .68em;"
+      >
+        <v-icon left>mdi-clipboard-outline</v-icon>
+        Copy
+      </v-btn>
     </v-card>
+
     <v-dialog v-model="dialog" persistent max-width="600px">
       <v-card>
         <v-card-title>
@@ -129,7 +136,6 @@ export default {
   width: 100%;
   height: 100%;
   max-width: none;
-  border: 1px solid green;
   background-color: #2d2d2d;
   color: #fafafa;
 
