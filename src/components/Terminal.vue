@@ -5,9 +5,11 @@
         <v-icon left>mdi-play</v-icon>
         RUN
       </v-btn>
-      <v-btn rounded>
-        <v-icon left>mdi-file-outline</v-icon>
-        STDIN
+      <v-btn rounded @click="dialog = true">
+        <v-badge color="primary" icon="mdi-paperclip" :value="stdin">
+          <v-icon left>mdi-file-outline</v-icon>
+          STDIN
+        </v-badge>
       </v-btn>
       <v-btn rounded>
         <v-icon left>mdi-clipboard-outline</v-icon>
@@ -36,12 +38,49 @@ hello world!</pre
         </v-chip>
       </v-card>
     </v-card>
+    <v-dialog v-model="dialog" persistent max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Edit Stdin Value</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-card class="ma-0 pa-0" flat tile>
+              <v-card-text>
+                This value will be inputted your program from stdin. You can
+                read this by function like <v-chip>scanf()</v-chip>.
+              </v-card-text>
+            </v-card>
+            <v-textarea
+              v-model="stdin"
+              name="input-7-1"
+              label="STDIN"
+              value=""
+              hint="This value will be inputted your program from stdin."
+            ></v-textarea>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="dialog = false"
+            >Close</v-btn
+          >
+          <v-btn color="blue darken-1" text @click="dialog = false">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
 export default {
   name: "Terminal",
+  data() {
+    return {
+      dialog: false,
+      stdin: "",
+    };
+  },
 };
 </script>
 

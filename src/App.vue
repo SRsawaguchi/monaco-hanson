@@ -37,7 +37,7 @@
         :items="items"
       />
       <v-card id="chiraura-ide" tile>
-        <Resizable direction="column" @manuallyResizeFinished="onResizeIde">
+        <Resizable direction="row" @manuallyResizeFinished="onResizeIde">
           <template v-slot:firstBlock>
             <ProgramEditor :width="editorWidth"></ProgramEditor>
           </template>
