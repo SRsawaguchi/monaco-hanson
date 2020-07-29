@@ -12,35 +12,23 @@
         </v-badge>
       </v-btn>
     </v-card>
-    <v-card class="console">
-      <v-card class="command" tile flat>
-        <v-icon left>mdi-chevron-right</v-icon>
-        <span>gcc -Wall -o main main.c</span>
-      </v-card>
-      <v-card class="output" tile flat>
-        <pre>{{ stdout }}</pre>
-      </v-card>
-      <v-card class="exec-info" tile flat>
-        <v-chip dark>
-          <v-icon left>mdi-clock-outline</v-icon>
-          Time Elapsed: 1100ms
-        </v-chip>
-        <v-chip dark>
-          <v-icon left>mdi-function</v-icon>
-          Return Value: 0
-        </v-chip>
-      </v-card>
 
-      <v-btn
-        small
-        rounded
-        @click="onClickCopyButton"
-        style="position: absolute; right: 0; top: 0; margin: .68em;"
-      >
-        <v-icon left>mdi-clipboard-outline</v-icon>
-        Copy
-      </v-btn>
-    </v-card>
+    <ExecResult
+      v-for="(result, index) in execResults"
+      :key="index"
+      :commands="result.commands"
+      :output="result.output"
+      :elapsedTimeMs="result.elapsedTimeMs"
+      :returnValue="result.returnValue"
+      @copySuccess="copySuccess = true"
+      @copyFailed="copyFailed = true"
+    ></ExecResult>
+
+    <StdinDialog
+      :dialog="dialog"
+      @close="closeDialog"
+      @update="onStdinUpdate"
+    ></StdinDialog>
 
     <v-snackbar
       v-model="copySuccess"
@@ -64,20 +52,16 @@
         </v-btn>
       </template>
     </v-snackbar>
-
-    <StdinDialog
-      :dialog="dialog"
-      @close="closeDialog"
-      @update="onStdinUpdate"
-    ></StdinDialog>
   </v-container>
 </template>
 
 <script>
 import StdinDialog from "./StdinDialog";
+import ExecResult from "./ExecResult";
+
 export default {
   name: "Terminal",
-  components: { StdinDialog },
+  components: { StdinDialog, ExecResult },
   data() {
     return {
       dialog: false,
@@ -85,6 +69,26 @@ export default {
       stdout: "Hello world!!\nHello world!!!!",
       copySuccess: false,
       copyFailed: false,
+      execResults: [
+        {
+          commands: ["go run main.go"],
+          output: "",
+          elapsedTimeMs: 0,
+          returnValue: 0,
+        },
+        {
+          commands: ["go run main.go"],
+          output: "error",
+          elapsedTimeMs: 10,
+          returnValue: 1,
+        },
+        {
+          commands: ["gcc -Wall -o main main.c", "./main"],
+          output: "Hello!!\nHello, World!!",
+          elapsedTimeMs: 4,
+          returnValue: 0,
+        },
+      ],
     };
   },
   methods: {
@@ -96,20 +100,6 @@ export default {
     },
     onStdinUpdate(value) {
       this.stdin = value;
-    },
-    onClickCopyButton() {
-      if (this.stdout === "") {
-        return;
-      }
-
-      navigator.clipboard.writeText(this.stdout).then(
-        () => {
-          this.copySuccess = true;
-        },
-        () => {
-          this.copyFailed = true;
-        }
-      );
     },
   },
 };
@@ -128,30 +118,6 @@ export default {
     padding: 0.68em;
     > * {
       margin: 0 0.68em;
-    }
-  }
-  .console {
-    margin: 0.68em 0;
-    padding: 0.68em;
-    .command {
-      > span {
-        font-family: monospace, monospace;
-      }
-    }
-    .output {
-      pre {
-        margin-left: 8px;
-        line-height: 1.14;
-      }
-    }
-    .exec-info {
-      padding: 0;
-      font-size: 0.68em;
-      > * {
-        margin: 0.68em 0;
-        margin-right: 0.68em;
-        margin-bottom: 0;
-      }
     }
   }
 }
