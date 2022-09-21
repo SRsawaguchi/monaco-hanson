@@ -15,7 +15,7 @@
     "monaco-vim": "^0.1.7",
     "v-hotkey": "^0.8.0",
     "vue": "^2.6.11",
-    "vuetify": "^2.2.11"
+    "vuetify": "^2.6.10"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.4.0",
